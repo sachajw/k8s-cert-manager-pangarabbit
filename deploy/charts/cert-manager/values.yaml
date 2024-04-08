@@ -69,12 +69,12 @@ global:
 
 # This option is equivalent to setting crds.enabled=true and crds.keep=true.
 # Deprecated: use crds.enabled and crds.keep instead.
-installCRDs: false
+installCRDs: true
 
 crds:
   # This option decides if the CRDs should be installed
   # as part of the Helm installation.
-  enabled: false
+  enabled: true
 
   # This option makes it so that the "helm.sh/resource-policy": keep
   # annotation is added to the CRD. This will prevent Helm from uninstalling
@@ -164,7 +164,7 @@ clusterResourceNamespace: ""
 # This namespace allows you to define where the services are installed into.
 # If not set then they use the namespace of the release.
 # This is helpful when installing cert manager as a chart dependency (sub chart).
-namespace: ""
+namespace: "cert-manager"
 
 serviceAccount:
   # Specifies whether a service account should be created.
