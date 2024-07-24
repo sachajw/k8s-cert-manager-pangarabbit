@@ -2,12 +2,12 @@ app: k8s-cert-manager-pangarabbit
 env: pangarabbit
 namespace: cert-manager
 chart:
-  #repository: https://charts.jetstack.io
-  repository: https://github.com/sachajw/k8s-cert-manager-pangarabbit.git?path=/deploy/charts/cert-manager/
+  repository: https://charts.jetstack.io
+  #repository: https://github.com/sachajw/k8s-cert-manager-pangarabbit.git?path=/deploy/charts/cert-manager/
   name: cert-manager
   version: 1.15.1
 values:
-  gitRepository: sachajw/k8s-cert-manager-pangarabbit
+  # gitRepository: sachajw/k8s-cert-manager-pangarabbit
   gitSha: "{{ .SHA }}"
   ingress:
     host: certman.pangarabbit.com
@@ -44,3 +44,34 @@ manifests: |
     redirectRegex:
       regex: ^http://localhost/(.*)
       replacement: https://certman.pangarabbit.com/${1}
+  ---
+  config:
+    apiVersion: controller.config.cert-manager.io/v1alpha1
+    kind: ControllerConfiguration
+    logging:
+      verbosity: 2
+      format: text
+    leaderElectionConfig:
+      namespace: kube-system
+    kubernetesAPIQPS: 9000
+    kubernetesAPIBurst: 9000
+    numberOfConcurrentWorkers: 200
+    featureGates:
+      AdditionalCertificateOutputFormats: true
+      DisallowInsecureCSRUsageDefinition: true
+      ExperimentalCertificateSigningRequestControllers: true
+      ExperimentalGatewayAPISupport: true
+      LiteralCertificateSubject: true
+      SecretsFilteredCaching: true
+      ServerSideApply: true
+      StableCertificateRequestName: true
+      UseCertificateRequestBasicConstraints: true
+      ValidateCAA: true
+    metricsTLSConfig:
+      dynamic:
+        secretNamespace: "cert-manager"
+        secretName: "cert-manager-metrics-ca"
+        dnsNames:
+        - cert-manager-metrics
+        - cert-manager-metrics.cert-manager
+        - cert-manager-metrics.cert-manager.svc
