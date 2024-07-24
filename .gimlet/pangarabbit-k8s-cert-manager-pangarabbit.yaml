@@ -4,12 +4,12 @@ namespace: cert-manager
 chart:
   repository: https://charts.jetstack.io
   #repository: https://github.com/sachajw/k8s-cert-manager-pangarabbit.git?path=/deploy/charts/cert-manager/
-  name: jetstack/cert-manager
+  name: cert-manager
   version: 1.15.1
 values:
   #gitRepository: sachajw/k8s-cert-manager-pangarabbit
-  gitRepository: cert-manager/cert-manager
-  gitSha: "{{ .SHA }}"
+  # gitRepository: cert-manager/cert-manager
+  # gitSha: "{{ .SHA }}"
   ingress:
     host: certman.pangarabbit.com
     tlsEnabled: true
