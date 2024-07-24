@@ -1,0 +1,78 @@
+app: k8s-cert-manager-pangarabbit
+env: pangarabbit
+namespace: cert-manager
+chart:
+  #repository: https://charts.jetstack.io
+  repository: https://github.com/sachajw/k8s-cert-manager-pangarabbit.git?path=/deploy/charts/cert-manager/
+  name: cert-manager
+  version: 1.15.1
+values:
+  gitRepository: sachajw/k8s-cert-manager-pangarabbit
+  #gitRepository: cert-manager/cert-manager
+  # gitSha: "{{ .SHA }}"
+  ingress:
+    host: certman.pangarabbit.com
+    tlsEnabled: true
+    resources:
+      ignoreLimits: true
+manifests: |
+  ---
+  apiVersion: traefik.io/v1alpha1
+  kind: IngressRoute
+  metadata:
+    name: cert-manager
+    namespace: cert-manager
+  spec:
+    entryPoints:
+      - web
+      - websecure
+    routes:
+      - kind: Rule
+        match: Host(`certman.pangarabbit.com`)
+        services:
+          - name: certman
+            namespace: cert-manager
+            port: 10081
+    tls:
+      certResolver: default
+  ---
+  apiVersion: traefik.io/v1alpha1
+  kind: Middleware
+  metadata:
+    name: cert-manager-redirectregex
+    namespace: cert-manager
+  spec:
+    redirectRegex:
+      regex: ^http://localhost/(.*)
+      replacement: https://certman.pangarabbit.com/${1}
+  ---
+  config:
+    apiVersion: controller.config.cert-manager.io/v1alpha1
+    kind: ControllerConfiguration
+    logging:
+      verbosity: 2
+      format: text
+    leaderElectionConfig:
+      namespace: kube-system
+    kubernetesAPIQPS: 9000
+    kubernetesAPIBurst: 9000
+    numberOfConcurrentWorkers: 200
+    featureGates:
+      AdditionalCertificateOutputFormats: true
+      DisallowInsecureCSRUsageDefinition: true
+      ExperimentalCertificateSigningRequestControllers: true
+      ExperimentalGatewayAPISupport: true
+      LiteralCertificateSubject: true
+      SecretsFilteredCaching: true
+      ServerSideApply: true
+      StableCertificateRequestName: true
+      UseCertificateRequestBasicConstraints: true
+      ValidateCAA: true
+    metricsTLSConfig:
+      dynamic:
+        secretNamespace: "cert-manager"
+        secretName: "cert-manager-metrics-ca"
+        dnsNames:
+        - cert-manager-metrics
+        - cert-manager-metrics.cert-manager
+        - cert-manager-metrics.cert-manager.svc
