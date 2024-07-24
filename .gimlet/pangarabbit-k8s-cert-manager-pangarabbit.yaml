@@ -2,12 +2,12 @@ app: k8s-cert-manager-pangarabbit
 env: pangarabbit
 namespace: cert-manager
 chart:
-  #repository: https://charts.jetstack.io
-  repository: https://github.com/sachajw/k8s-cert-manager-pangarabbit.git?path=/deploy/charts/cert-manager/
+  repository: https://charts.jetstack.io
+  #repository: https://github.com/sachajw/k8s-cert-manager-pangarabbit.git?path=/deploy/charts/cert-manager/
   name: cert-manager
   version: 1.15.1
 values:
-  gitRepository: sachajw/k8s-cert-manager-pangarabbit
+  #gitRepository: sachajw/k8s-cert-manager-pangarabbit
   #gitRepository: cert-manager/cert-manager
   # gitSha: "{{ .SHA }}"
   ingress:
