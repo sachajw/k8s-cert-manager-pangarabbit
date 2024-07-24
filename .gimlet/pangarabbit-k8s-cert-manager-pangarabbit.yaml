@@ -8,6 +8,7 @@ chart:
   version: 1.15.1
 values:
   # gitRepository: sachajw/k8s-cert-manager-pangarabbit
+  gitRepository: cert-manager/cert-manager
   gitSha: "{{ .SHA }}"
   ingress:
     host: certman.pangarabbit.com
