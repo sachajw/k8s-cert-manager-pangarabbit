@@ -14,33 +14,33 @@ values:
     tlsEnabled: true
     resources:
       ignoreLimits: true
-# manifests: |
-#   ---
-#   apiVersion: traefik.io/v1alpha1
-#   kind: IngressRoute
-#   metadata:
-#     name: cert-manager
-#     namespace: cert-manager
-#   spec:
-#     entryPoints:
-#       - web
-#       - websecure
-#     routes:
-#       - kind: Rule
-#         match: Host(`certman.pangarabbit.com`)
-#         services:
-#           - name: certman
-#             namespace: cert-manager
-#             port: 10081
-#     tls:
-#       certResolver: default
-#   ---
-#   apiVersion: traefik.io/v1alpha1
-#   kind: Middleware
-#   metadata:
-#     name: cert-manager-redirectregex
-#     namespace: cert-manager
-#   spec:
-#     redirectRegex:
-#       regex: ^http://localhost/(.*)
-#       replacement: https://certman.pangarabbit.com/${1}
+manifests: |
+  ---
+  apiVersion: traefik.io/v1alpha1
+  kind: IngressRoute
+  metadata:
+    name: cert-manager
+    namespace: cert-manager
+  spec:
+    entryPoints:
+      - web
+      - websecure
+    routes:
+      - kind: Rule
+        match: Host(`certman.pangarabbit.com`)
+        services:
+          - name: certman
+            namespace: cert-manager
+            port: 10081
+    tls:
+      certResolver: default
+  ---
+  apiVersion: traefik.io/v1alpha1
+  kind: Middleware
+  metadata:
+    name: cert-manager-redirectregex
+    namespace: cert-manager
+  spec:
+    redirectRegex:
+      regex: ^http://localhost/(.*)
+      replacement: https://certman.pangarabbit.com/${1}
